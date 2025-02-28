@@ -8,7 +8,7 @@ GallerySync is a photo curation app where users can search for images using the 
 
 ### 🚀 Live Demo
 
-🔗 **Live URL**: [Deployed URL](#)  
+🔗 **Live URL**: [https://gallerysync-backend.onrender.com/](#)  
 🔗 **API Documentation**: [Postman Collection](#)
 
 ---
@@ -43,7 +43,7 @@ GallerySync is a photo curation app where users can search for images using the 
 - **Database**: Supabase
 - **External API**: Unsplash API
 - **Testing**: Jest
-- **Hosting**: (Specify if applicable)
+- **Hosting**: Render
 
 ---
 
@@ -59,7 +59,7 @@ npm run dev
 Run tests:
 
 ```bash
-npm test
+npm run test
 ```
 
 ---
