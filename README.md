@@ -36,25 +36,39 @@ GallerySync is a **photo curation app** that allows users to search images via t
 
 ### 📸 Sample API Responses
 
-#### 🔍 Search Images (`GET /api/photos/search`)
+#### 🙎‍♂️ Create User (`POST /api/users`)
 
-![Search API Response](#) *(Sample API Response Screenshot Here)*
+<img width="969" alt="Image" src="https://github.com/user-attachments/assets/b50cb229-199d-48f6-90f3-ae8c1233b0b0" />
+
+---
+
+#### 🔍 Search Image (`GET /api/photos/search`)
+
+<img width="983" alt="Image" src="https://github.com/user-attachments/assets/318f1c4e-8461-48e8-932b-5999d6fa2c7b" />
+
+---
 
 #### 💾 Save Image (`POST /api/photos`)
 
-![Save Image Response](#) *(Sample API Response Screenshot Here)*
+<img width="972" alt="Image" src="https://github.com/user-attachments/assets/8757efef-92b9-4a00-ad55-408f19130bd0" />
+
+---
 
 #### 🏷️ Add Tags (`POST /api/photos/:photoId/tags`)
 
-![Add Tags Response](#) *(Sample API Response Screenshot Here)*
+<img width="970" alt="Image" src="https://github.com/user-attachments/assets/86acc54a-6841-4ce6-96e5-366d56ffb033" />
+
+---
 
 #### 🔎 Search by Tag (`GET /api/photos/tag/search`)
 
-![Search by Tag Response](#) *(Sample API Response Screenshot Here)*
+<img width="1053" alt="Image" src="https://github.com/user-attachments/assets/da916b5a-c846-41a1-98da-e8ab87e30b74" />
+
+---
 
 #### 🕒 View Search History (`GET /api/search-history`)
 
-![Search History Response](#) *(Sample API Response Screenshot Here)*
+<img width="964" alt="Image" src="https://github.com/user-attachments/assets/a20dfaa2-ea53-4766-91b8-eb8b1d504dee" />
 
 ---
 
