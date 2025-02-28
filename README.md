@@ -88,7 +88,7 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/AkshAI-2030/GallerySync-Backend
-cd gallerysync
+cd GallerySync-Backend
 ```
 
 Install dependencies:
