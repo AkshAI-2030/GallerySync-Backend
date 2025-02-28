@@ -108,8 +108,28 @@ Run tests:
 ```bash
 npm run test
 ```
-
 ---
+
+## 🔧 Configuration
+
+To run this project locally, create a `.env` file in the root directory and include the following environment variables:
+
+```ini
+# Unsplash API Keys (Required for image search)
+UNSPLASH_ACCESS_KEY="your_unsplash_access_key"
+UNSPLASH_SECRET_KEY="your_unsplash_secret_key"
+
+# Database Configuration (Supabase PostgreSQL)
+DB_USER="your_db_user"
+DB_PASSWORD="your_db_password"
+DB_NAME="your_db_name"
+DB_HOST="your_db_host"
+DB_PORT=5432
+
+# Server Configuration
+PORT=3000
+MICROSERVICE_BASE_URL="https://api.unsplash.com"
+```
 
 ## 📜 License
 
