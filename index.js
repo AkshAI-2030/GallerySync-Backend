@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/api/users", createNewUser);
-app.get("/search/photos", searchImages);
-app.post("/photos", saveNewPhotos);
+app.get("/api/photos/search", searchImages);
+app.post("/api/photos", saveNewPhotos);
 app.post("/api/photos/:photoId/tags", addTags);
 app.get("/api/photos/tag/search", searchByTag);
 app.get("/api/search-history", searchHistoryByUserId);
@@ -32,7 +32,7 @@ sequelize
     console.error("unable to connect to database", error);
   });
 
-app.listen(3002, () => {
-  console.log(`server started at port${3002}`);
+app.listen(3000, () => {
+  console.log(`server started at port:${3000}`);
 });
 module.exports = { app };

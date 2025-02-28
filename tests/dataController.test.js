@@ -1,4 +1,5 @@
-require("dotenv").config();
+const request = require("supertest");
+const express = require("express");
 const {
   createNewUser,
   searchImages,
@@ -7,163 +8,140 @@ const {
   searchByTag,
   searchHistoryByUserId,
 } = require("../controllers/dataController");
-const { searchImagesFromUnsplash } = require("../controllers/userController");
-const axiosInstance = require("../lib/axios.lib");
+const {
+  user: userModel,
+  photo: photoModel,
+  tag: tagModel,
+  searchHistory: searchHistoryModel,
+} = require("../models");
+const {
+  searchImagesFromUnsplash,
+} = require("../services/searchImagesFromUnsplash");
+const { doesUserExist } = require("../services/userService");
 
-jest.mock("../lib/axios.lib.js", () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
+jest.mock("../models");
+jest.mock("../services/searchImagesFromUnsplash");
+jest.mock("../services/userService");
 
-describe("Data Controller Tests", () => {
-  test("should fetch images with given query success", async () => {
-    const mockResponse = {
-      photos: [
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHwxfHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "No description available",
-          altDescription: "orange flowers",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHwyfHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description:
-            "You can help and support me via my description (Paypal) !\n\nInstagram : @clvmentm\nFacebook Page : www.facebook.com/CMReflections/\n\nIf you wish to buy it in full quality, email me on clementmreflections@gmail.com.",
-          altDescription: "photo of pine trees",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1518495973542-4542c06a5843?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHwzfHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "Finding my roots",
-          altDescription: "sun light passing through green leafed tree",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHw0fHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "No description available",
-          altDescription: "white clouds during daytime",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1505142468610-359e7d316be0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "Maldives",
-          altDescription: "aerial photo of seashore",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHw2fHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "Flying through a storm into the sunset.",
-          altDescription: "clouds during golden hour",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1529419412599-7bb870e11810?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHw3fHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "No description available",
-          altDescription: "bed of orange flowers",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1495584816685-4bdbf1b5057e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHw4fHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description: "Pooling Water",
-          altDescription: "green leaf with water drops",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1508349937151-22b68b72d5b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHw5fHxuYXR1cmV8ZW58MHx8fHwxNzMyODc5NDczfDA&ixlib=rb-4.0.3&q=80&w=400",
-          description:
-            "It was at 1pm a monday. I was on holliday and i wanted to make something cool for my day, so I saw the fog outside of my house and these kinde of orange / green trees. So I said why not go to this little path near my house, and this is how the photo was made!",
-          altDescription: "road between yellow leaf trees at daytime",
-        },
-        {
-          imageUrl:
-            "https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODA0MTd8MHwxfHNlYXJjaHwxMHx8bmF0dXJlfGVufDB8fHx8MTczMjg3OTQ3M3ww&ixlib=rb-4.0.3&q=80&w=400",
-          description: "Not so tasty",
-          altDescription: "red and white mushroom",
-        },
-      ],
-    };
-    const query = "nature";
-    const images = await searchImagesFromUnsplash(query);
-    axiosInstance.get.mockResolvedValue(mockResponse);
-    const req = { query: { query: "nature" } };
-    const res = { json: jest.fn(), status: jest.fn(() => res) };
-    await searchImages(req, res);
+const app = express();
+app.use(express.json());
+app.post("/user", createNewUser);
+app.get("/search", searchImages);
+app.post("/save-photo", saveNewPhotos);
+app.post("/add-tags/:photoId", addTags);
+app.get("/search-tag", searchByTag);
+app.get("/search-history", searchHistoryByUserId);
 
-    expect(axiosInstance.get).toHaveBeenCalledWith("/search/photos", {
-      params: { query: "nature", per_page: 10 },
-      headers: {
-        Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
-      },
-    });
-    expect(images).toEqual(mockResponse);
+describe("Data Controller API Tests", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("should handle API errors gracefully", async () => {
-    const req = {
-      query: { query: "nature" },
-    };
-
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-
-    axiosInstance.get.mockRejectedValue({
-      response: { status: 500 },
+  test("should create a new user successfully", async () => {
+    doesUserExist.mockResolvedValue(false);
+    userModel.create.mockResolvedValue({
+      id: 1,
+      username: "testuser",
+      email: "test@example.com",
     });
 
-    await searchImages(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Failed to fetch images from Unsplash.",
-      message: "--Failed to fetch image details--",
-    });
+    const res = await request(app)
+      .post("/user")
+      .send({ username: "testuser", email: "test@example.com" });
+    expect(res.status).toBe(201);
+    expect(res.body.message).toBe("User created successfully.");
   });
 
-  // test("should fetch hotels by location", async () => {
-  //   const mockResponse = {
-  //     hotels: [
-  //       {
-  //         id: 1,
-  //         name: "Bechtelar LLC Hotel",
-  //         location: "Cuttack",
-  //         price_per_night: 29991.83,
-  //         available_rooms: 6,
-  //       },
-  //     ],
-  //   };
-  //   axiosInstance.get.mockResolvedValue(mockResponse);
-  //   const req = { query: { location: "Cuttack" } };
-  //   const res = { json: jest.fn(), status: jest.fn(() => res) };
-  //   await getHotelsByLocation(req, res);
+  test("should return error when email already exists", async () => {
+    doesUserExist.mockResolvedValue(true);
 
-  //   expect(axiosInstance.get).toHaveBeenCalledWith(
-  //     `/hotels/search?location=Cuttack`
-  //   );
-  //   expect(res.json).toHaveBeenCalledWith(mockResponse.data);
-  // });
+    const res = await request(app)
+      .post("/user")
+      .send({ username: "testuser", email: "test@example.com" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Email already exists.");
+  });
 
-  // test("should fetch sites by location", async () => {
-  //   const mockResponse = {
-  //     sites: [
-  //       {
-  //         id: 2,
-  //         name: "Kemmer - Bailey Site",
-  //         location: "Chikballapur",
-  //         description: "Tam necessitatibus vapulus magnam.",
-  //       },
-  //     ],
-  //   };
-  //   axiosInstance.get.mockResolvedValue(mockResponse);
-  //   const req = { query: { location: "Chikballpur" } };
-  //   const res = { json: jest.fn(), status: jest.fn(() => res) };
-  //   await getSitesByLocation(req, res);
+  test("should search images successfully", async () => {
+    searchImagesFromUnsplash.mockResolvedValue([
+      { imageUrl: "http://image.com" },
+    ]);
 
-  //   expect(axiosInstance.get).toHaveBeenCalledWith(
-  //     `/sites/search?location=Chikballpur`
-  //   );
-  //   expect(res.json).toHaveBeenCalledWith(mockResponse.data);
-  // });
+    const res = await request(app).get("/search").query({ query: "nature" });
+    expect(res.status).toBe(200);
+    expect(res.body.photos).toHaveLength(1);
+  });
+
+  test("should return error for no images found", async () => {
+    searchImagesFromUnsplash.mockResolvedValue([]);
+
+    const res = await request(app).get("/search").query({ query: "unknown" });
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe("No images found for the given query.");
+  });
+
+  test("should save new photo successfully", async () => {
+    photoModel.create.mockResolvedValue({
+      id: 1,
+      imageUrl: "http://image.com",
+      tags: ["tag1"],
+    });
+    tagModel.bulkCreate.mockResolvedValue(true);
+
+    const res = await request(app)
+      .post("/save-photo")
+      .send({
+        imageUrl: "https://images.unsplash.com/photo",
+        description: "Beautiful landscape",
+        altDescription: "Mountain view silicon valley.",
+        tags: ["nature", "mountain", "greenery", "snow"],
+        userId: 4,
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.message).toBe("Photo saved successfully.");
+  });
+
+  test("should add tags to a photo successfully", async () => {
+    photoModel.findByPk.mockResolvedValue({
+      id: 1,
+      tags: ["oldTag"],
+      save: jest.fn(),
+    });
+    tagModel.bulkCreate.mockResolvedValue(true);
+
+    const res = await request(app)
+      .post("/add-tags/1")
+      .send({ tags: ["newTag"] });
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe("Tags added successfully.");
+  });
+
+  test("should return error if photo not found for adding tags", async () => {
+    photoModel.findByPk.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post("/add-tags/1")
+      .send({ tags: ["newTag"] });
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe("Photo not found with this ID.");
+  });
+
+  test("should fetch search history successfully", async () => {
+    userModel.findByPk.mockResolvedValue(true);
+    searchHistoryModel.findAll.mockResolvedValue([
+      { query: "nature", timestamp: "2024-07-25T12:00:00Z" },
+    ]);
+
+    const res = await request(app).get("/search-history").query({ userId: 1 });
+    expect(res.status).toBe(200);
+    expect(res.body.searchHistory).toHaveLength(1);
+  });
+
+  test("should return error if user not found in search history", async () => {
+    userModel.findByPk.mockResolvedValue(null);
+
+    const res = await request(app).get("/search-history").query({ userId: 1 });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toBe("User not found with ID:1 in the DB");
+  });
 });

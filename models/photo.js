@@ -17,17 +17,16 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Define any associations here
   photo.associate = (models) => {
+    // A photo belongs to a user (many photos to one user)
     photo.belongsTo(models.user, {
       foreignKey: "userId",
     });
-  };
-  photo.associate = (models) => {
-    // The tag belongs to a photo (many-to-one relationship)
+
+    // A photo has many tags (one photo to many tags)
     photo.hasMany(models.tag, {
-      foreignKey: "photoId", // foreign key reference in tag
-      as: "photoTags",
+      foreignKey: "photoId", // foreign key reference in the tag model
+      as: "photoTags", // alias for the association
     });
   };
 

@@ -51,9 +51,9 @@ function validateTags(tags) {
   return errors;
 }
 
-function validateSearchTagQuery(tags, sort) {
+function validateSearchTagQuery(tag, sort) {
   const errors = [];
-  if (!tags || typeof tags !== "string") {
+  if (!tag || typeof tag !== "string") {
     errors.push("A valid tag must be provided as a query parameter.");
   }
   if (sort && !["ASC", "DESC"].includes(sort.toUpperCase())) {

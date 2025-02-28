@@ -9,15 +9,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       timestamp: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW, // default timestamp for when the search is made
+        defaultValue: DataTypes.NOW,
       },
     },
     {
-      timestamps: true, // automatically adds 'createdAt' and 'updatedAt' fields
+      timestamps: true,
     }
   );
 
-  // Define associations (if any)
   searchHistory.associate = (models) => {
     // The searchHistory belongs to a user (one-to-many relationship)
     searchHistory.belongsTo(models.user, {

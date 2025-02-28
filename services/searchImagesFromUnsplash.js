@@ -1,4 +1,4 @@
-const axiosInstance = require("../lib/axios.lib");
+const { axiosInstance } = require("../lib/axios.lib");
 require("dotenv").config();
 
 const searchImagesFromUnsplash = async (query) => {
@@ -20,7 +20,6 @@ const searchImagesFromUnsplash = async (query) => {
 
     const photos = [];
     const results = response.data.results;
-    console.log(response.data);
     for (let i = 0; i < results.length; i++) {
       const photo = results[i];
       photos.push({

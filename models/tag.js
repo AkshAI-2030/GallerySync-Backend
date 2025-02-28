@@ -9,11 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      timestamps: true, // Automatically adds 'createdAt' and 'updatedAt' fields
+      timestamps: true,
     }
   );
 
-  // Define associations (if any)
   tag.associate = (models) => {
     // The tag belongs to a photo (many-to-one relationship)
     tag.belongsTo(models.photo, {
