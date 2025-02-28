@@ -87,7 +87,7 @@ GallerySync is a **photo curation app** that allows users to search images via t
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-repo/gallerysync.git
+git clone https://github.com/AkshAI-2030/GallerySync-Backend
 cd gallerysync
 ```
 
